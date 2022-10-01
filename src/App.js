@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ThemeProvider, CircularProgress, Box } from "@mui/material";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-  useLocation,
-} from "react-router-dom";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Account from "./components/Auth";
 import Home from "./components/Home";
 import theme from "./theme";

@@ -2,39 +2,60 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   increment,
   updateDoc,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { db } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { CircularProgress, Box, Typography } from "@mui/material";
+import { onAuthStateChanged } from "firebase/auth";
 
 const LinkRedirect = () => {
   const { shortCode } = useParams();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchLinkDoc = async () => {
-      const linkCollection = collection(db, "links");
-      const linkDoc = doc(linkCollection, shortCode);
-      const getLink = await getDoc(linkDoc);
+    onAuthStateChanged(auth, (user) => {
+      const userUid = user.uid;
+      let result;
 
-      if (getLink.exists()) {
-        const { longURL, linkID, userUid } = getLink.data();
-        const usersCollection = collection(db, "users", userUid, "links");
-        const link = doc(usersCollection, linkID);
-        await updateDoc(link, {
-          totalClicks: increment(1),
-        });
+      const fetchLinkDoc = async () => {
+        const linkCollection = collection(db, "users", userUid, "links");
+        const getLinks = await getDocs(linkCollection);
 
-        window.location.href = longURL;
-      } else {
-        setLoading(false);
-      }
-    };
-    fetchLinkDoc();
-  }, []);
+        const linkID = () => {
+          return getLinks._snapshot.docChanges.map((doc) => {
+            if (
+              shortCode ===
+              doc.doc.data.value.mapValue.fields.shortCode.stringValue
+            ) {
+              return (result = doc.doc.key.path.segments[8]);
+            }
+            return 0;
+          });
+        };
+        linkID();
+
+        const link = doc(linkCollection, result);
+        const getLink = await getDoc(link);
+
+        if (getLink.exists()) {
+          const { longURL } = getLink.data();
+          console.log(longURL);
+          await updateDoc(link, {
+            totalClicks: increment(1),
+          });
+
+          window.location.href = longURL;
+        } else {
+          setLoading(false);
+        }
+      };
+      fetchLinkDoc();
+    });
+  }, [shortCode]);
 
   if (loading)
     return (
