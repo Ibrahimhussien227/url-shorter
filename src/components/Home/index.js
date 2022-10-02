@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Typography, Box } from "@mui/material";
 import AuthModal from "./AuthModal";
+import "./index.css";
 
 const Home = () => {
   const [openAuthModal, setOpenAuthModal] = useState(false);
@@ -11,7 +12,7 @@ const Home = () => {
       p={3}
       boxSizing="border-box"
       height="100vh"
-      bgcolor="#56B7BA"
+      className="gradient"
       color="#fff"
     >
       {openAuthModal && <AuthModal onClose={() => setOpenAuthModal(false)} />}
@@ -35,7 +36,7 @@ const Home = () => {
             variant="contained"
             size="large"
             color="inherit"
-            style={{ color: "#56B7BA" }}
+            style={{ background: "#00c9b7", borderRadius: "50px" }}
             onClick={() => setOpenAuthModal(true)}
           >
             Get Started

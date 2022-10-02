@@ -15,9 +15,14 @@ const LinkCard = ({
 }) => {
   const shortUrl = `${window.location.host}/${shortCode}`;
   return (
-    <Box display="flex" justifyContent="space-between" alignItems="center">
+    <Box
+      className=""
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+    >
       <Box width="50%">
-        <Typography color="textSecondary" variant="overline">
+        <Typography variant="overline">
           Created at {format(createdAt, "d MMM, HH:mm")}
         </Typography>
         <Box my={2}>
@@ -29,7 +34,7 @@ const LinkCard = ({
           </Typography>
         </Box>
         <Box display="flex" alignItems="center">
-          <Typography color="primary">{shortUrl}</Typography>
+          <Typography color="#28a1ed">{shortUrl}</Typography>
           <Box mx={2}>
             <Button
               onClick={() => copyLink(shortUrl)}
